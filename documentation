@@ -1,0 +1,68 @@
+# Settings Routes Documentation
+
+---
+
+## Pays Routes
+
+- **GET** `/settings/pays/all`  
+  **Résultat :**  
+
+  ```json
+  {
+    "statusCode": 200,
+    "httpStatus": "OK",
+    "message": "Listes des pays",
+    "result": [
+        {
+            "id_pays": 1,
+            "CommonName": "Afghanistan",
+            "Capital": "Kabul"
+        }
+      ]
+  }
+  ```
+
+- **POST** `/settings/pays/create`  
+  **Body :**  
+  ```json
+  {
+    "CommonName": "France",
+    "Capital": "Paris"
+  }
+  ```
+  **Résultat :**  
+  ```json
+  {
+    "statusCode": 201,
+    "httpStatus": "CREATED",
+    "message": "Creation de pays est faite avec succes",
+    "result": {
+        "id_pays": 270,
+        "CommonName": "France",
+        "Capital": "Paris"
+    }
+  }
+  ```
+
+---
+
+## General Settings Routes
+
+- **POST** `/settings/general/create`  
+  **Body :**  
+  ```json
+  {
+   "id_pays": 2,
+    "id_devise": 2,
+    "id_type_article": 1,
+    "tva": 21,
+    "interet_retard": 2,
+    "text_affiche": "Text",
+    "type_document": 1,
+    "is_applicable" :1
+  }
+  ```
+
+
+- **GET** `/settings/general/findAll`  
+

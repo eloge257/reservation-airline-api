@@ -1,0 +1,43 @@
+{
+  "name": "Api-facturation",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "Eloge257",
+  "license": "ISC",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "test --coverage",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.18.3",
+    "express-fileupload": "^1.5.0",
+    "html-to-text": "^9.0.5",
+    "i18n": "^0.15.1",
+    "ip": "^2.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "juice": "^10.0.0",
+    "md5": "^2.3.0",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.45",
+    "mysql2": "^3.9.2",
+    "nodemailer": "^7.0.3",
+    "nodemon": "^3.1.0",
+    "puppeteer": "^24.10.1",
+    "qrcode": "^1.5.4",
+    "react-webcam": "^7.2.0",
+    "sequelize": "^6.37.1",
+    "sharp": "^0.32.6",
+    "socket.io": "^4.7.5",
+    "util": "^0.12.5",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
