@@ -29,7 +29,8 @@ const Client = sequelize.define('client', {
     },
     is_activated:{
           type: DataTypes.TINYINT,
-        allowNull: false
+        allowNull: false,
+        defaultValue:1
     },
     date_creation:{
           type: DataTypes.DATE,
