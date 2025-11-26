@@ -1,5 +1,7 @@
  const { DataTypes } = require('sequelize');
 const sequelize = require("../utils/sequelize");
+const Type_vol = require('./Type_vol');
+const Airports = require('./Airports');
 /**
  * model pour la table vol
  * @author Eloge257
@@ -19,11 +21,11 @@ const Vol = sequelize.define('vol', {
         type: DataTypes.TINYINT,
         allowNull: false
     },
-    aeroport_depart: {
+    airport_depart: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    aeroport_arrive: {
+    airport_arrive: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -45,7 +47,7 @@ const Vol = sequelize.define('vol', {
         allowNull: false,
     },
        date_creation: {
-        type: DataTypes.TINYINT,
+        type: DataTypes.DATE,
         allowNull: false,
         defaultValue:DataTypes.NOW
     },
@@ -58,5 +60,9 @@ const Vol = sequelize.define('vol', {
     timestamps: false,
     tableName: 'vol'
 });
+Vol.belongsTo(Type_vol, { foreignKey: 'id_type_vol', as: 'type_vol' });
+Vol.belongsTo(Airports, { foreignKey: 'airport_depart', as: 'airport_dp',targetKey: "id_airports"});
+Vol.belongsTo(Airports, { foreignKey: 'airport_arrive', as: 'airport_arr', targetKey: "id_airports"});
+
 
 module.exports = Vol;

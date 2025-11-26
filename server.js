@@ -99,9 +99,9 @@ const isHttps = false;
 // app.io = io;
 
 // app.listen(5000, () => {
-app.listen(5000, "10.238.130.227", () => {
+app.listen(3000, () => {
   console.log(
-    `${process.env.NODE_ENV?.toUpperCase()} - Server is running on : 172.16.0.116:${port}/`
+    `${process.env.NODE_ENV?.toUpperCase()} - Server is running on : 127.0.0.1:${port}/`
   );
 });
 // Start server

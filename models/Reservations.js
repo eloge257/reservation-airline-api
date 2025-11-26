@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require("../utils/sequelize");
+const Client = require('./Client');
+const Vol = require('./Vol');
 /**
  * model pour la table  reservations
  * @author Eloge257
@@ -22,6 +24,7 @@ const Reservations = sequelize.define('reservations', {
     is_activated: {
         type: DataTypes.TINYINT,
         allowNull: false,
+        defaultValue:0
     },
     statut_reservations: {
         type: DataTypes.TINYINT,
@@ -37,5 +40,8 @@ const Reservations = sequelize.define('reservations', {
     timestamps: false,
     tableName: 'reservations'
 });
+
+Reservations.belongsTo(Client, { foreignKey: 'id_client', as: 'client' });
+Reservations.belongsTo(Vol, { foreignKey: 'id_vol', as: 'vol' });
 
 module.exports = Reservations;
