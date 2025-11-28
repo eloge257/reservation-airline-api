@@ -532,6 +532,441 @@ const activ_desactiv_client = async (req,res) => {
     }
 }
 
+// --------------------------------Listes
+/**
+ * Lister tous les utilisateurs
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const findAllclient = async (req, res) => {
+  try {
+    const {  rows = 10, first = 0, sortField, sortOrder, search } = req.query;
+
+    const defaultSortField = "DATE_INSERTION";
+    const defaultSortDirection = "DESC";
+    const sortColumns = {
+      client: {
+        as: "client",
+        fields: {
+          id_client: "id_client",
+        },
+      },
+    };
+
+    var orderColumn, orderDirection;
+
+    // sorting
+    var sortModel;
+    if (sortField) {
+      for (let key in sortColumns) {
+        if (sortColumns[key].fields.hasOwnProperty(sortField)) {
+          sortModel = {
+            model: key,
+            as: sortColumns[key].as,
+          };
+          orderColumn = sortColumns[key].fields[sortField];
+          break;
+        }
+      }
+    }
+    if (!orderColumn || !sortModel) {
+      orderColumn = sortColumns.client.fields.id_client;
+      sortModel = {
+        model: "client",
+        as: sortColumns.client,
+      };
+    }
+    // ordering
+    if (sortOrder == 1) {
+      orderDirection = "ASC";
+    } else if (sortOrder == -1) {
+      orderDirection = "DESC";
+    } else {
+      orderDirection = defaultSortDirection;
+    }
+
+    // searching
+    const globalSearchColumns = [
+      "nom",
+      "prenom",
+    ];
+    var globalSearchWhereLike = {};
+    if (search && search.trim() != "") {
+      const searchWildCard = {};
+      globalSearchColumns.forEach((column) => {
+        searchWildCard[column] = {
+          [Op.substring]: search,
+        };
+      });
+      globalSearchWhereLike = {
+        [Op.or]: searchWildCard,
+      };
+    }
+   
+
+    const result = await Client.findAndCountAll({
+      limit: parseInt(rows),
+      offset: parseInt(first),
+      order: [[sortModel, orderColumn, orderDirection]],
+      where: {
+        ...globalSearchWhereLike,
+      },
+    });
+    res.status(RESPONSE_CODES.OK).json({
+      statusCode: RESPONSE_CODES.OK,
+      httpStatus: RESPONSE_STATUS.OK,
+      message: "Liste des client",
+      result: {
+        data: result.rows,
+        totalRecords: result.count,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    });
+  }
+};
+
+
+
+// --------------------------------Listes
+/**
+ * Lister tous les utilisateurs
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const findAllReservation = async (req, res) => {
+  try {
+    const {  rows = 10, first = 0, sortField, sortOrder, search } = req.query;
+
+    const defaultSortField = "DATE_INSERTION";
+    const defaultSortDirection = "DESC";
+    const sortColumns = {
+      reservations: {
+        as: "reservations",
+        fields : {
+          id_reservations : "id_reservations",
+        },
+      },
+    };
+
+    var orderColumn, orderDirection;
+
+    // sorting
+    var sortModel;
+    if (sortField) {
+      for (let key in sortColumns) {
+        if (sortColumns[key].fields.hasOwnProperty(sortField)) {
+          sortModel = {
+            model: key,
+            as: sortColumns[key].as,
+          };
+          orderColumn = sortColumns[key].fields[sortField];
+          break;
+        }
+      }
+    }
+    if (!orderColumn || !sortModel) {
+      orderColumn = sortColumns.reservations.fields.id_reservations;
+      sortModel = {
+        model: "reservations",
+        as: sortColumns.reservations,
+      };
+    }
+    // ordering
+    if (sortOrder == 1) {
+      orderDirection = "ASC";
+    } else if (sortOrder == -1) {
+      orderDirection = "DESC";
+    } else {
+      orderDirection = defaultSortDirection;
+    }
+
+    // searching
+    const globalSearchColumns = [
+      "id_client",
+    ];
+    var globalSearchWhereLike = {};
+    if (search && search.trim() != "") {
+      const searchWildCard = {};
+      globalSearchColumns.forEach((column) => {
+        searchWildCard[column] = {
+          [Op.substring]: search,
+        };
+      });
+      globalSearchWhereLike = {
+        [Op.or]: searchWildCard,
+      };
+    }
+  
+
+    const result = await Reservations.findAndCountAll({
+      limit: parseInt(rows),
+      offset: parseInt(first),
+      order: [[sortModel, orderColumn, orderDirection]],
+        include:[
+                {
+                    model:Client,
+                    as:"client"
+                },
+                {
+                    model:Vol,
+                    as:"vol",
+                    include:[
+                        {
+                            model:Type_vol,
+                            as:"type_vol"
+                        },
+                        {
+                            model:Airports,
+                            as:"airport_dp"
+                        },
+                         {
+                            model:Airports,
+                            as:"airport_arr"
+                        }
+                    ]
+                }
+            ],
+      where: {
+        ...globalSearchWhereLike,
+      },
+    });
+    res.status(RESPONSE_CODES.OK).json({
+      statusCode: RESPONSE_CODES.OK,
+      httpStatus: RESPONSE_STATUS.OK,
+      message: "Liste des client",
+      result: {
+        data: result.rows,
+        totalRecords: result.count,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    });
+  }
+};
+
+
+/**
+ * Lister tous les utilisateurs
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const findAllVol = async (req, res) => {
+  try {
+    const {  rows = 10, first = 0, sortField, sortOrder, search } = req.query;
+
+    const defaultSortField = "DATE_INSERTION";
+    const defaultSortDirection = "DESC";
+    const sortColumns = {
+      vol: {
+        as: "vol",
+        fields : {
+          id_vol : "id_vol",
+        },
+      },
+    };
+
+    var orderColumn, orderDirection;
+
+    // sorting
+    var sortModel;
+    if (sortField) {
+      for (let key in sortColumns) {
+        if (sortColumns[key].fields.hasOwnProperty(sortField)) {
+          sortModel = {
+            model: key,
+            as: sortColumns[key].as,
+          };
+          orderColumn = sortColumns[key].fields[sortField];
+          break;
+        }
+      }
+    }
+    if (!orderColumn || !sortModel) {
+      orderColumn = sortColumns.vol.fields.id_vol;
+      sortModel = {
+        model: "vol",
+        as: sortColumns.vol,
+      };
+    }
+    // ordering
+    if (sortOrder == 1) {
+      orderDirection = "ASC";
+    } else if (sortOrder == -1) {
+      orderDirection = "DESC";
+    } else {
+      orderDirection = defaultSortDirection;
+    }
+
+    // searching
+    const globalSearchColumns = [
+      "id_vol",
+    ];
+    var globalSearchWhereLike = {};
+    if (search && search.trim() != "") {
+      const searchWildCard = {};
+      globalSearchColumns.forEach((column) => {
+        searchWildCard[column] = {
+          [Op.substring]: search,
+        };
+      });
+      globalSearchWhereLike = {
+        [Op.or]: searchWildCard,
+      };
+    }
+  
+
+    const result = await Vol.findAndCountAll({
+      limit: parseInt(rows),
+      offset: parseInt(first),
+      order: [[sortModel, orderColumn, orderDirection]],
+      include:[
+                        {
+                            model:Type_vol,
+                            as:"type_vol"
+                        },
+                        {
+                            model:Airports,
+                            as:"airport_dp"
+                        },
+                         {
+                            model:Airports,
+                            as:"airport_arr"
+                        }
+                    ],
+      where: {
+        ...globalSearchWhereLike,
+      },
+    });
+    res.status(RESPONSE_CODES.OK).json({
+      statusCode: RESPONSE_CODES.OK,
+      httpStatus: RESPONSE_STATUS.OK,
+      message: "Liste des client",
+      result: {
+        data: result.rows,
+        totalRecords: result.count,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    });
+  }
+};
+
+
+/**
+ * Lister tous les utilisateurs
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const findAllairports = async (req, res) => {
+  try {
+    const {  rows = 10, first = 0, sortField, sortOrder, search } = req.query;
+
+    const defaultSortField = "DATE_INSERTION";
+    const defaultSortDirection = "DESC";
+    const sortColumns = {
+      airports: {
+        as: "airports",
+        fields: {
+          id_airports: "id_airports",
+        },
+      },
+    };
+
+    var orderColumn, orderDirection;
+
+    // sorting
+    var sortModel;
+    if (sortField) {
+      for (let key in sortColumns) {
+        if (sortColumns[key].fields.hasOwnProperty(sortField)) {
+          sortModel = {
+            model: key,
+            as: sortColumns[key].as,
+          };
+          orderColumn = sortColumns[key].fields[sortField];
+          break;
+        }
+      }
+    }
+    if (!orderColumn || !sortModel) {
+      orderColumn = sortColumns.airports.fields.id_airports
+      sortModel = {
+        model: "airports",
+        as: sortColumns.airports,
+      };
+    }
+    // ordering
+    if (sortOrder == 1) {
+      orderDirection = "ASC";
+    } else if (sortOrder == -1) {
+      orderDirection = "DESC";
+    } else {
+      orderDirection = defaultSortDirection;
+    }
+
+    // searching
+    const globalSearchColumns = [
+      "id_airports",
+    ];
+    var globalSearchWhereLike = {};
+    if (search && search.trim() != "") {
+      const searchWildCard = {};
+      globalSearchColumns.forEach((column) => {
+        searchWildCard[column] = {
+          [Op.substring]: search,
+        };
+      });
+      globalSearchWhereLike = {
+        [Op.or]: searchWildCard,
+      };
+    }
+  
+
+    const result = await Airports.findAndCountAll({
+      limit: parseInt(rows),
+      offset: parseInt(first),
+      order: [[sortModel, orderColumn, orderDirection]],
+      where: {
+        ...globalSearchWhereLike,
+      },
+    });
+    res.status(RESPONSE_CODES.OK).json({
+      statusCode: RESPONSE_CODES.OK,
+      httpStatus: RESPONSE_STATUS.OK,
+      message: "Liste des client",
+      result: {
+        data: result.rows,
+        totalRecords: result.count,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    });
+  }
+};
+
+
+
 
 
 
@@ -544,7 +979,11 @@ module.exports = {
     findAll,
     changeStatut,
     changeStatutVol,
-    activ_desactiv_client
+    activ_desactiv_client,
+    findAllclient,
+    findAllReservation,
+    findAllVol,
+    findAllairports
 }
 
 
