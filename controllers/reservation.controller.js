@@ -148,7 +148,7 @@ const createTypeVol = async (req, res) => {
 
 const createVol = async (req, res) => {
     try {
-        const { numero_vol, id_type_vol, airport_depart, airport_arrive, date_depart, date_arrive, prix, compagnie } = req.body
+        const { numero_vol, id_type_vol, airport_depart, airport_arrive,destination, date_depart, date_arrive, prix, compagnie } = req.body
 
         //validation des champs avant l'enregistrement
         const validationSchema = yup.object({
@@ -165,7 +165,7 @@ const createVol = async (req, res) => {
         await validationSchema.validate(req.body, { abortEarly: false, stripUnknown: true });
 
         //insertion des donnees
-        const insertData = await Vol.create({ numero_vol, id_type_vol, airport_depart, airport_arrive, date_depart, date_arrive, prix, compagnie })
+        const insertData = await Vol.create({ numero_vol, id_type_vol, destination,airport_depart, airport_arrive, date_depart, date_arrive, prix, compagnie })
 
         //reponse  d une fonction
         res.status(RESPONSE_CODES.CREATED).json({

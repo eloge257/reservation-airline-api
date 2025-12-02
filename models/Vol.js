@@ -21,6 +21,10 @@ const Vol = sequelize.define('vol', {
         type: DataTypes.TINYINT,
         allowNull: false
     },
+    destination:{
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
     airport_depart: {
         type: DataTypes.INTEGER,
         allowNull: false
