@@ -19,8 +19,7 @@ dotenv.config()
 const login = async (req, res) => {
     try {
         const { username, password, deviceInfo: deviceInfoStr } = req.body;
-        // return console.log(username,"---------------------");
-        
+
         var deviceInfo
         if (deviceInfoStr) {
             deviceInfo = JSON.parse(deviceInfoStr)
@@ -56,6 +55,11 @@ const login = async (req, res) => {
             attributes: ['id_utilisateurs', 'username', 'id_client', 'mot_de_passe', 'is_activated'],
          
         })
+         const userObj = await Utilisateurs.findOne({
+            where: { username: username, is_activated: 1 },
+            attributes: ['id_utilisateurs', 'username', 'id_client', 'is_activated'],
+         
+        })
         // return console.log(userObject.toJSON(),password,"-------------------------");
         
         if (userObject) {
@@ -63,7 +67,7 @@ const login = async (req, res) => {
             const validPassword = await bcrypt.compare(password, user.mot_de_passe)
             if (validPassword) {
                 const tokenData = {
-                    user: user.id_utilisateurs,
+                    user: userObj,
                 }
                 const token = generateToken(tokenData, TOKENS_CONFIG.APP_ACCESS_TOKEN_MAX_AGE)
                 const JWT_REFRESH_PRIVATE_KEY = process.env.JWT_REFRESH_PRIVATE_KEY || "\L/@B8?o4@vp-3MCt!,*\S@,e7+-TK]'a5M8o!t)!\cMqhw|aO4i8}Uq*L7,46)--}4c-]\[el/3D-G-F#pg4*FPP.xoYqa-W3,s|8.(tCa(s@uC;:L"
