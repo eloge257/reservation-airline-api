@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require("../utils/sequelize");
+const Client = require('./Client');
 /**
  * model pour la table utilisateurs
  * @author Eloge257
@@ -36,5 +37,6 @@ const Utilisateurs = sequelize.define('utilisateurs', {
     timestamps: false,
     tableName: 'utilisateurs'
 });
+Utilisateurs.belongsTo(Client, {foreignKey:"id_client" , as:"client"})
 
 module.exports = Utilisateurs;

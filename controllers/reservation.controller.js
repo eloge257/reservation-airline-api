@@ -17,8 +17,8 @@ const Historique_reservations = require("../models/Historique_reservations");
 
 const createClient = async (req, res) => {
     try {
-        const { nom, prenom, email, telephone,username } = req.body
-
+        const { nom, prenom,telephone, email,username } = req.body
+        // const telephone = "76897678"
         //validation des champs avant l'enregistrement
         const validationSchema = yup.object({
             nom: yup.string().required("Champ est obligatoire"),

@@ -7,7 +7,8 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const RESPONSE_CODES = require("../constants/RESPONSE_CODES")
 const RESPONSE_STATUS = require("../constants/RESPONSE_STATUS")
-const Utilisateurs = require("../models/Utilisateurs")
+const Utilisateurs = require("../models/Utilisateurs");
+const Client = require("../models/Client");
 dotenv.config()
 
 /**
@@ -57,7 +58,11 @@ const login = async (req, res) => {
         })
          const userObj = await Utilisateurs.findOne({
             where: { username: username, is_activated: 1 },
-            attributes: ['id_utilisateurs', 'username', 'id_client', 'is_activated'],
+            include:{
+                model:Client,
+                as:"client"
+            }
+            // attributes: [],
          
         })
         // return console.log(userObject.toJSON(),password,"-------------------------");
